@@ -19,6 +19,8 @@ const mockData = [
   { textContent: ".", "data-key": ".", class: "shift" },
 ];
 
+const SPECIAL_CHARACTERS = ["+", "-", "x", "/"];
+
 /********* Design *********************/
 
 const createLiElemtents = (mockData) => {
@@ -61,23 +63,28 @@ const createCalculatorComponent = () => {
 
 document.body.appendChild(createCalculatorComponent());
 
-/********* Funcionality ***************/
+/********* Logic *********************/
+const operations = {
+  clear: () => (divScreen.textContent = ""),
+  equal: () => (divScreen.textContent = eval(divScreen.textContent)),
+};
 const addToDisplay = (value) => (divScreen.textContent += value);
-const clearDisplay = () => (divScreen.textContent = "");
-const calculate = () => (divScreen.textContent = eval(divScreen.textContent));
 
 liKeys.forEach((li) => {
   li.firstElementChild.addEventListener("click", (e) => {
     try {
-      if (e.target.dataset.key == "clear") {
-        clearDisplay();
-      } else if (e.target.dataset.key == "equal") {
-        calculate();
-      } else {
-        addToDisplay(e.target.dataset.key);
+      // Si el texto viene con tamaño 1rem, es porque es un mensaje de
+      // error y se debe limpiar el display y volver al tamaño original
+      if (divScreen.style.fontSize === "1rem") {
+        divScreen.textContent = "";
+        divScreen.style.fontSize = "3rem";
       }
+      operations[e.target.dataset.key]
+        ? operations[e.target.dataset.key]()
+        : addToDisplay(e.target.dataset.key);
     } catch (error) {
-      alert(error);
+      divScreen.style.fontSize = "1rem";
+      divScreen.textContent = error.message;
     }
   });
 });
