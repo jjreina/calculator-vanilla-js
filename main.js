@@ -27,7 +27,8 @@ const createLiElemtents = (mockData) => {
   let liElements = mockData.map((object) => {
     let anchor = document.createElement("a");
     anchor.textContent = object.textContent;
-    anchor.setAttribute("data-key", object["data-key"]);
+    // anchor.setAttribute("data-key", object["data-key"]);
+    anchor.dataset.key = object["data-key"];
     anchor.href = "#";
     anchor.className = object.class;
     let li = document.createElement("li");
